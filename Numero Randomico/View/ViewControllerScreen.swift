@@ -103,64 +103,6 @@ class ViewControllerScreen: UIView {
         self.numberTextField.delegate = delegate
     }
     
-    public func validateTextFields() {
-        let number: Int = Int(self.numberTextField.text ?? "0" ) ?? 0
-        
-        if number != 0 {
-            self.configButtonEnabel(true)
-        } else {
-            self.configButtonEnabel(false)
-        }
-    }
-    
-    private func configButtonEnabel(_ enabel: Bool) {
-        if enabel {
-            self.tryNumberButton.setTitleColor(.white, for: .normal)
-            self.tryNumberButton.isEnabled = true // permitido apertar o botao "isEnabled"
-        } else {
-            self.tryNumberButton.setTitleColor(.darkGray, for: .normal)
-            self.tryNumberButton.isEnabled = false // nao permitido apertar o botao
-        }
-    }
-    
-    func validateInformation() {
-        guard let number = Int(numberTextField.text ?? "0") else { return }
-        
-        if number == numberRandom {
-            explanationLabel.text = "Parabéns, você acertou!"
-            attempts = []
-            tryNumberButton.isEnabled = false
-            tryNumberButton.setTitleColor(.darkGray, for: .normal)
-        } else if number < numberRandom && attempts.count < 3 {
-            attempts.append(number)
-            explanationLabel.text = "Você errou, aumente seu numero!"
-            if attempts.count == 3 {
-                explanationLabel.text = "Acabaram suas tentativas, comece de novo!"
-                tryNumberButton.isEnabled = false
-                tryNumberButton.setTitleColor(.darkGray, for: .normal)
-            }
-        } else if number > numberRandom && attempts.count < 3 {
-            attempts.append(number)
-            explanationLabel.text = "Você errou, diminua seu numero!"
-            if attempts.count == 3 {
-                explanationLabel.text = "Acabaram suas tentativas, comece de novo!"
-                tryNumberButton.isEnabled = false
-                tryNumberButton.setTitleColor(.darkGray, for: .normal)
-            }
-        } else {
-            explanationLabel.text = "Acabaram suas tentativas, comece de novo!"
-            tryNumberButton.isEnabled = false
-        }
-        
-        print(attempts)
-    }
-    
-    func resetGame() {
-        numberRandom = Int.random(in: 1...10)
-        attempts = []
-        explanationLabel.text = "Você tem 3 chances para acertar!"
-    }
-    
     @objc private func tappedTryNumberButton() {
         delegate?.actionTryNumberButton()
     }
