@@ -5,22 +5,12 @@
 //  Created by Marcelo Falcao Costa Filho on 20/11/22.
 //
 
-protocol ViewControllerScreenProtocol: AnyObject {
-    func actionTryNumberButton()
-    func actionResetButton()
-}
-
 import UIKit
 
 class ViewControllerScreen: UIView {
 
-    private weak var delegate: ViewControllerScreenProtocol?
-    var numberRandom = Int.random(in: 1...10)
-    var attempts: [Int] = []
-    
-    func delegate(delegate: ViewControllerScreenProtocol?) {
-        self.delegate = delegate
-    }
+    var viewController: ViewController = .init()
+
     
     lazy var welcomeLabel: UILabel = {
         let label = UILabel()
@@ -104,11 +94,11 @@ class ViewControllerScreen: UIView {
     }
     
     @objc private func tappedTryNumberButton() {
-        delegate?.actionTryNumberButton()
+        viewController.validateInformation(number: numberTextField, explanation: explanationLabel, button: tryNumberButton)
     }
     
     @objc private func tappedResetButton() {
-        delegate?.actionResetButton()
+        viewController.resetGame(number: numberTextField, explanation: explanationLabel)
     }
     
     required init?(coder: NSCoder) {
