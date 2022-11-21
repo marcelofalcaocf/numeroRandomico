@@ -11,7 +11,6 @@ class ViewControllerScreen: UIView {
 
     var viewController: ViewController = .init()
 
-    
     lazy var welcomeLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -91,6 +90,16 @@ class ViewControllerScreen: UIView {
     
     public func configTextFieldDelegate(delegate: UITextFieldDelegate) {
         self.numberTextField.delegate = delegate
+    }
+    
+    public func configButtonEnabel(_ enabel: Bool) {
+        if enabel {
+            tryNumberButton.setTitleColor(.white, for: .normal)
+            tryNumberButton.isEnabled = true // permitido apertar o botao "isEnabled"
+        } else {
+            tryNumberButton.setTitleColor(.darkGray, for: .normal)
+            tryNumberButton.isEnabled = false // nao permitido apertar o botao
+        }
     }
     
     @objc private func tappedTryNumberButton() {

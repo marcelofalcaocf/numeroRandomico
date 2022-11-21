@@ -65,21 +65,13 @@ class ViewController: UIViewController {
         let number: Int = Int(number.text ?? "0" ) ?? 0
         
         if number != 0 {
-            self.configButtonEnabel(true)
+            viewControllerScreen.configButtonEnabel(true)
         } else {
-            self.configButtonEnabel(false)
+            viewControllerScreen.configButtonEnabel(false)
         }
     }
     
-    private func configButtonEnabel(_ enabel: Bool) {
-        if enabel {
-            viewControllerScreen.tryNumberButton.setTitleColor(.white, for: .normal)
-            viewControllerScreen.tryNumberButton.isEnabled = true // permitido apertar o botao "isEnabled"
-        } else {
-            viewControllerScreen.tryNumberButton.setTitleColor(.darkGray, for: .normal)
-            viewControllerScreen.tryNumberButton.isEnabled = false // nao permitido apertar o botao
-        }
-    }
+
     
 }
 
