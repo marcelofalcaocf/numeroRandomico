@@ -7,10 +7,19 @@
 
 import UIKit
 
+protocol ViewControllerScreenProtocol {
+    func actionTryNumberButton()
+    func actionResetButton()
+}
+
 class ViewControllerScreen: UIView {
 
-    var viewController: ViewController = .init()
+    private var delegate: ViewControllerScreenProtocol?
 
+    func delegate(delegate: ViewControllerScreenProtocol?) {
+        self.delegate = delegate
+    }
+    
     lazy var welcomeLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -92,7 +101,17 @@ class ViewControllerScreen: UIView {
         self.numberTextField.delegate = delegate
     }
     
-    public func configButtonEnabel(_ enabel: Bool) {
+    public func validateTextFields() {
+        let number: Int = Int(numberTextField.text ?? "0" ) ?? 0
+        
+        if number != 0 {
+            configButtonEnabel(true)
+        } else {
+            configButtonEnabel(false)
+        }
+    }
+    
+    private func configButtonEnabel(_ enabel: Bool) {
         if enabel {
             tryNumberButton.setTitleColor(.white, for: .normal)
             tryNumberButton.isEnabled = true // permitido apertar o botao "isEnabled"
@@ -102,12 +121,46 @@ class ViewControllerScreen: UIView {
         }
     }
     
+    public func numberExists() -> Int {
+        if let number = Int(numberTextField.text ?? "0") {
+            return number
+        }
+        return 0
+    }
+    
+    public func userWon() {
+        explanationLabel.text = "Parabéns, você acertou!"
+        tryNumberButton.isEnabled = false
+        tryNumberButton.setTitleColor(.darkGray, for: .normal)
+    }
+    
+    public func userErrForLess() {
+        explanationLabel.text = "Você errou, aumente seu numero!"
+    }
+    
+    public func userFailed() {
+        explanationLabel.text = "Acabaram suas tentativas, comece de novo!"
+        tryNumberButton.isEnabled = false
+        tryNumberButton.setTitleColor(.darkGray, for: .normal)
+    }
+    
+    public func userErrForMore() {
+        explanationLabel.text = "Você errou, diminua seu numero!"
+    }
+    
+    public func resetGame() {
+        explanationLabel.text = "Você tem 3 chances para acertar!"
+        numberTextField.text = ""
+    }
+    
     @objc private func tappedTryNumberButton() {
-        viewController.validateInformation(number: numberTextField, explanation: explanationLabel, button: tryNumberButton)
+        delegate?.actionTryNumberButton()
+        //viewController.validateInformation(number: numberTextField, explanation: explanationLabel, button: tryNumberButton)
     }
     
     @objc private func tappedResetButton() {
-        viewController.resetGame(number: numberTextField, explanation: explanationLabel)
+        delegate?.actionResetButton()
+        //viewController.resetGame(number: numberTextField, explanation: explanationLabel)
     }
     
     required init?(coder: NSCoder) {

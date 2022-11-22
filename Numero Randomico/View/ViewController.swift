@@ -20,64 +20,55 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewControllerScreen.configTextFieldDelegate(delegate: self)
+        viewControllerScreen.delegate(delegate: self)
     }
     
-    func validateInformation(number: UITextField, explanation: UILabel, button: UIButton) {
-        guard let number = Int(number.text ?? "0") else { return }
+    func validateInformation() {
+        let number = viewControllerScreen.numberExists()
         
-        if number == numberRandom {
-            explanation.text = "Parabéns, você acertou!"
+        if  number == numberRandom {
+            viewControllerScreen.userWon()
             attempts = []
-            button.isEnabled = false
-            button.setTitleColor(.darkGray, for: .normal)
         } else if number < numberRandom && attempts.count < 3 {
             attempts.append(number)
-            explanation.text = "Você errou, aumente seu numero!"
+            viewControllerScreen.userErrForLess()
             if attempts.count == 3 {
-                explanation.text = "Acabaram suas tentativas, comece de novo!"
-                button.isEnabled = false
-                button.setTitleColor(.darkGray, for: .normal)
+                viewControllerScreen.userFailed()
             }
         } else if number > numberRandom && attempts.count < 3 {
             attempts.append(number)
-            explanation.text = "Você errou, diminua seu numero!"
+            viewControllerScreen.userErrForMore()
             if attempts.count == 3 {
-                explanation.text = "Acabaram suas tentativas, comece de novo!"
-                button.isEnabled = false
-                button.setTitleColor(.darkGray, for: .normal)
+                viewControllerScreen.userFailed()
             }
         } else {
-            explanation.text = "Acabaram suas tentativas, comece de novo!"
-            button.isEnabled = false
+            viewControllerScreen.userFailed()
         }
-        
         print(attempts)
     }
     
-    func resetGame(number: UITextField, explanation: UILabel) {
+    func resetGame() {
         numberRandom = Int.random(in: 1...10)
         attempts = []
-        explanation.text = "Você tem 3 chances para acertar!"
-        number.text = ""
+        viewControllerScreen.resetGame()
     }
-    
-    public func validateTextFields(number: UITextField) {
-        let number: Int = Int(number.text ?? "0" ) ?? 0
-        
-        if number != 0 {
-            viewControllerScreen.configButtonEnabel(true)
-        } else {
-            viewControllerScreen.configButtonEnabel(false)
-        }
-    }
-    
+}
 
+extension ViewController: ViewControllerScreenProtocol {
+    func actionTryNumberButton() {
+        validateInformation()
+    }
+    
+    func actionResetButton() {
+        resetGame()
+    }
+    
     
 }
 
 extension ViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
-        validateTextFields(number: textField)
+        viewControllerScreen.validateTextFields()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
